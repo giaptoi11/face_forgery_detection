@@ -1,0 +1,50 @@
+# =======================
+#   TRAINING CONFIG
+# =======================
+
+# --- Experiment ---
+experiment_name: "MoE_FFD_FFPP_augment"
+save_dir: "checkpoints/01_MoE_FFD_FFPP_augment"
+
+# --- Dataset ---
+dataset:
+  name: "FFPP"                       # FFPP | CDF | DFDC | WDF | DFD
+  root: "/home/toi/research/face_forgery_detection/datasets/ffpp"          # root path to dataset
+  train_split: "train.json"
+  val_split: "val.json"
+  test_split: "test.json"
+  batch_size: 32
+  num_workers: 4
+  img_size: 224
+
+# --- Model ---
+model:
+  backbone: "vit_base_patch16_224"
+  pretrained: true
+  freeze_backbone: true
+  num_classes: 2
+
+# --- Optimization ---
+optimizer:
+  type: "adamw"
+  lr: 3e-5
+  weight_decay: 1e-5
+
+scheduler:
+  type: "cosine"
+  warmup_epochs: 1
+  total_epochs: 20
+
+# --- Loss weighting ---
+loss:
+  ce_weight: 1.0
+  moe_weight: 1.0
+  lora_lambda: 200.0
+  adapter_lambda: 1.0
+
+# --- Device & Logging ---
+device: "cuda"
+seed: 2024
+log_interval: 50
+eval_interval: 1
+resume: -1  # epoch to resume from, -1 for fresh start
