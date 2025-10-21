@@ -1,0 +1,11 @@
+**.venv/
+**.zip
+**.png
+**.jpg
+**.jpeg
+**.pkl
+**.tar
+**.log
+**.dat
+datasets/
+**.pyc
