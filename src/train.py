@@ -296,17 +296,18 @@ def train(config, model, optimizer, train_loader, valid_loader, scheduler, save_
         state = {'model_state_dict': model.state_dict(),
                  'optimizer_state_dict': optimizer.state_dict(),
                  'epoch': epoch}
-        torch.save(state, os.path.join(save_dir, 'models_params_{}.tar'.format(epoch)))
+        # torch.save(state, os.path.join(save_dir, 'models_params_{}.tar'.format(epoch)))
+        torch.save(state, os.path.join(save_dir, 'models_params_best.tar'))
 
         if video_results.AUC > max_accuracy:
             for m in os.listdir(save_dir):
-                if m.startswith('model_params_best'):
+                if m.startswith('model_params_best') and m.endswith('.pkl'):
                     current_models = m
                     os.remove(os.path.join(save_dir, current_models))
             max_accuracy = video_results.AUC
             torch.save(model.state_dict(), 
-                      '{}model_params_best_{:.4f}auc{:.4f}epoch{:0>3}.pkl'.format(
-                          config.save_dir, video_results.ACC, video_results.AUC, epoch+1))
+                      save_dir+'/model_params_best_{:.4f}auc{:.4f}epoch{:0>3}.pkl'.format(
+                          video_results.ACC, video_results.AUC, epoch+1))
 
         scheduler.step()
     
@@ -385,7 +386,15 @@ if __name__ == '__main__':
     print(config.optimizer.lr, type(config.optimizer.lr))
     optimizer = optim.Adam([{'params': special_param, 'initial_lr':1e-4}, {'params': other_param, 'initial_lr': config.optimizer.lr}],
                            lr=config.optimizer.lr, betas=(0.9, 0.999), weight_decay=1e-5)
-    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=5, gamma=0.5, last_epoch=config.resume)
+    # scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=5, gamma=0.5, last_epoch=config.resume)
+    scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
+                                                            optimizer,
+                                                            T_max=config.scheduler.total_epochs,
+                                                            eta_min=0,
+                                                            last_epoch=config.resume
+                                                        )
+
+    print(f"Scheduler: CosineAnnealingLR with T_max={config.scheduler.total_epochs}, eta_min={0}, last_epoch={config.resume}")
 
 
     print('Start train process...')

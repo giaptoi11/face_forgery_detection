@@ -4,7 +4,7 @@
 
 # --- Experiment ---
 experiment_name: "MoE_FFD_FFPP_augment"
-save_dir: "checkpoints/01_MoE_FFD_FFPP_augment"
+save_dir: "checkpoints/03_FFPP_50aug_50orig_cosinelr"
 
 # --- Dataset ---
 dataset:
@@ -14,7 +14,7 @@ dataset:
   val_split: "val.json"
   test_split: "test.json"
   batch_size: 32
-  num_workers: 4
+  num_workers: 8
   img_size: 224
 
 # --- Model ---

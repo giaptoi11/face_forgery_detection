@@ -1,0 +1,36 @@
+# =======================
+#   TRAINING CONFIG
+# =======================
+
+# --- Experiment ---
+experiment_name: "03_FFPP_50aug_50orig_cosinelr"
+save_dir: "checkpoints/03_FFPP_50aug_50orig_cosinelr"
+version: 1
+# --- Dataset ---
+dataset:
+  name: "cdfv2"                       # FFPP | CDF | DFDC | WDF | DFD
+  root: "/home/toi/research/face_forgery_detection/datasets/cdfv2"          # root path to cdfv1, cdfv2, dfdc
+  batch_size: 1
+  num_workers: 4
+  img_size: 224
+
+# --- Model ---
+model:
+  backbone: "vit_base_patch16_224"
+  path: 
+  # /home/toi/research/face_forgery_detection/checkpoints/01_MoE_FFD_FFPP_augment/models_params_best.tar
+  pretrained: true
+  freeze_backbone: true
+  num_classes: 2
+
+
+# --- Loss weighting ---
+loss:
+  ce_weight: 1.0
+  moe_weight: 1.0
+  lora_lambda: 200.0
+  adapter_lambda: 1.0
+
+# --- Device & Logging ---
+device: "cuda:0"
+seed: 2024

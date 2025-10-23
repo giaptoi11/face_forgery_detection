@@ -1,0 +1,2 @@
+timestamp,dataset,model,checkpoint,video_acc,video_auc,video_eer,frame_acc,frame_auc,frame_eer,test_time(s)
+2025-10-23 10:33:32,cdfv2,vit_base_patch16_224,models_params_best.tar,0.8386,0.8642,0.2190,0.8386,0.8642,0.2190,4402.67
